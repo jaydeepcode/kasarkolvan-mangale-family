@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Kasarkolvan Mangle Family | कासारकोळवण मंगळे कुटुंब</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --saffron:#C8720A;--saffron-l:#F5A623;--saffron-p:#FEF3E2;
+  --indigo:#1B2B5E;--indigo2:#2E4080;
+  --cream:#FAF7F2;--cream2:#F0E9DF;
+  --text:#2C1810;--muted:#7A6658;
+  --b1:#B5451B;--b2:#1A6B3A;--b3:#1455A4;--b4:#6B3E26;
+  --b5:#7B2D8B;--b6:#C17D11;--b7:#1B7A7A;--b8:#5C6B30;
+  --root:#1B2B5E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow:hidden;height:100vh}
+header{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--indigo);box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.htop{display:flex;align-items:center;gap:10px;padding:10px 16px}
+.htop h1{font-family:'Crimson Pro',serif;color:var(--saffron-l);font-size:clamp(14px,3.5vw,20px);font-weight:600;line-height:1.2}
+.htop p{font-family:'Tiro Devanagari Marathi',serif;color:rgba(255,255,255,.6);font-size:clamp(10px,2vw,12px)}
+.badge{margin-left:auto;background:var(--saffron);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.swrap{padding:0 16px 10px;position:relative}
+.swrap input{width:100%;padding:9px 13px 9px 36px;border-radius:10px;border:2px solid transparent;background:rgba(255,255,255,.11);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .2s}
+.swrap input::placeholder{color:rgba(255,255,255,.4)}
+.swrap input:focus{background:rgba(255,255,255,.17);border-color:var(--saffron-l)}
+.sicon{position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+.sresults{position:absolute;top:calc(100% - 4px);left:16px;right:16px;background:#fff;border-radius:12px;box-shadow:0 12px 40px rgba(27,43,94,.2);overflow:hidden;max-height:300px;overflow-y:auto;display:none;z-index:300}
+.sresults.show{display:block}
+.si{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;border-bottom:1px solid #f0ebe4;transition:background .15s}
+.si:last-child{border-bottom:none}
+.si:hover,.si:active{background:var(--saffron-p)}
+.sdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.smr{font-family:'Tiro Devanagari Marathi',serif;font-size:14px}
+.sen{font-size:11px;color:var(--muted)}
+.sgen{font-size:10px;background:var(--cream2);padding:2px 7px;border-radius:10px;color:var(--muted);white-space:nowrap;margin-left:auto}
+.nores{padding:14px;text-align:center;color:var(--muted);font-size:13px}
+#filters{position:fixed;left:0;right:0;z-index:150;background:var(--cream2);border-bottom:1px solid #E0D5C8;padding:7px 12px;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+#filters::-webkit-scrollbar{display:none}
+.fl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.fb{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:2px solid;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;background:#fff;flex-shrink:0}
+.fb.on{color:#fff!important}
+.fdot{width:7px;height:7px;border-radius:50%;background:currentColor}
+#canvas{position:fixed;overflow:hidden;cursor:grab;touch-action:none;background:var(--cream)}
+#canvas.grab{cursor:grabbing}
+#world{position:absolute;transform-origin:0 0}
+.node{position:absolute;width:130px;border-radius:10px;border:2.5px solid;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.09);transition:box-shadow .2s,transform .15s;overflow:visible;user-select:none}
+.node:hover{box-shadow:0 6px 20px rgba(0,0,0,.16);transform:translateY(-1px)}
+.node.hi{box-shadow:0 0 0 3px var(--saffron),0 6px 24px rgba(200,114,10,.4)!important;transform:translateY(-1px)}
+.nbar{height:4px;width:100%}
+.nbody{padding:6px 8px 8px}
+.nmr{font-family:'Tiro Devanagari Marathi',serif;font-size:12px;color:var(--text);line-height:1.3}
+.nen{font-size:9px;color:var(--muted);margin-top:1px}
+.nmeta{font-size:8.5px;color:var(--muted);margin-top:3px;font-style:italic;line-height:1.3}
+.tbtn{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);width:26px;height:26px;border-radius:50%;border:2.5px solid;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15);z-index:10;transition:transform .2s;line-height:1}
+.tbtn:hover{transform:translateX(-50%) scale(1.25)}
+#svgl{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+.gl{position:fixed;left:6px;font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;opacity:.5;pointer-events:none;white-space:nowrap;z-index:149}
+.zc{position:fixed;right:13px;z-index:200;display:flex;flex-direction:column;gap:5px;align-items:center}
+.zb{width:42px;height:42px;background:#fff;border:1px solid #DDD;border-radius:10px;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;transition:background .15s;font-family:monospace;color:var(--text)}
+.zb:hover{background:var(--saffron-p)}
+.zlbl{font-size:8px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-align:center}
+#legend{position:fixed;left:10px;z-index:148;background:rgba(255,255,255,.93);border-radius:10px;padding:8px 12px;box-shadow:0 4px 20px rgba(27,43,94,.1);backdrop-filter:blur(4px)}
+.lt{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.li{display:flex;align-items:center;gap:5px;margin-bottom:3px;font-size:10.5px;color:var(--text)}
+.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ov{position:fixed;inset:0;background:rgba(27,43,94,.4);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(3px)}
+.ov.on{opacity:1;pointer-events:all}
+.sh{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:22px 22px 0 0;z-index:500;transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.4,.64,1);max-height:88vh;overflow-y:auto;box-shadow:0 -8px 48px rgba(27,43,94,.25)}
+.sh.on{transform:translateY(0)}
+.shandle{display:flex;justify-content:center;padding:12px 0 4px}
+.shandle div{width:38px;height:4px;background:#E0D8D0;border-radius:2px}
+.shdr{padding:6px 22px 18px;border-bottom:1px solid var(--cream2);position:relative}
+.shbar{height:4px;border-radius:2px;margin-bottom:13px}
+.shmr{font-family:'Tiro Devanagari Marathi',serif;font-size:28px;color:var(--text);line-height:1.3}
+.shen{font-family:'Crimson Pro',serif;font-size:19px;color:var(--muted);font-style:italic;margin-top:2px}
+.shbdg{display:inline-block;margin-top:9px;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;color:#fff}
+.xcb{position:absolute;top:6px;right:14px;background:var(--cream2);border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.sbody{padding:16px 22px}
+.pr{display:flex;gap:11px;margin-bottom:13px;align-items:flex-start}
+.pi{font-size:18px;width:26px;flex-shrink:0;margin-top:1px}
+.plbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+.pval{font-size:15px;color:var(--text)}
+.lnk{color:var(--saffron);cursor:pointer;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{background:var(--cream2);border:1px solid #E0D8CF;border-radius:20px;padding:4px 10px;cursor:pointer;transition:background .15s}
+.chip:hover{background:var(--saffron-p)}
+.cmr{font-family:'Tiro Devanagari Marathi',serif;font-size:13px}
+.cen{font-size:10px;color:var(--muted);display:block;text-align:center}
+.crbtn{width:100%;padding:14px;background:var(--indigo);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin:12px 0 28px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s}
+.crbtn:hover{background:var(--indigo2)}
+.crbtn:active{transform:scale(.98)}
+@media(max-width:480px){#legend{display:none}}
+</style>
+</head>
+<body>
+<header id="hdr">
+  <div class="htop">
+    <div><h1>Kasarkolvan Mangle Family Tree</h1><p>कासारकोळवण मंगळे कुटुंब वंशावळ</p></div>
+    <div class="badge">280 Members · 8 Branches</div>
+  </div>
+  <div class="swrap">
+    <span class="sicon">🔍</span>
+    <input type="text" id="si" placeholder="Search name... नाव शोधा" autocomplete="off" spellcheck="false">
+    <div class="sresults" id="sr"></div>
+  </div>
+</header>
+<div id="filters">
+  <span class="fl">Branch ▸</span>
+  <button class="fb on" data-b="all" style="border-color:var(--indigo);color:var(--indigo)">🌳 All</button>
+  <button class="fb" data-b="b1" style="border-color:var(--b1);color:var(--b1)"><span class="fdot"></span>रघुनाथ</button>
+  <button class="fb" data-b="b2" style="border-color:var(--b2);color:var(--b2)"><span class="fdot"></span>गोविंद</button>
+  <button class="fb" data-b="b3" style="border-color:var(--b3);color:var(--b3)"><span class="fdot"></span>गोपाळ</button>
+  <button class="fb" data-b="b4" style="border-color:var(--b4);color:var(--b4)"><span class="fdot"></span>लक्ष्मण</button>
+  <button class="fb" data-b="b5" style="border-color:var(--b5);color:var(--b5)"><span class="fdot"></span>महादेव</button>
+  <button class="fb" data-b="b6" style="border-color:var(--b6);color:var(--b6)"><span class="fdot"></span>आत्माराम</button>
+  <button class="fb" data-b="b7" style="border-color:var(--b7);color:var(--b7)"><span class="fdot"></span>केशव</button>
+  <button class="fb" data-b="b8" style="border-color:var(--b8);color:var(--b8)"><span class="fdot"></span>तुकाराम</button>
+</div>
+<div id="canvas"><div id="world"><svg id="svgl"></svg></div></div>
+<div id="glabels"></div>
+<div id="legend">
+  <div class="lt">8 Family Branches</div>
+  <div class="li"><div class="ld" style="background:var(--root)"></div>बाळकृष्ण · Root (Gen 1)</div>
+  <div class="li"><div class="ld" style="background:var(--b1)"></div>रघुनाथ · 20 members</div>
+  <div class="li"><div class="ld" style="background:var(--b2)"></div>गोविंद · 33 members</div>
+  <div class="li"><div class="ld" style="background:var(--b3)"></div>गोपाळ · 38 members</div>
+  <div class="li"><div class="ld" style="background:var(--b4)"></div>लक्ष्मण · 46 members</div>
+  <div class="li"><div class="ld" style="background:var(--b5)"></div>महादेव · 55 members</div>
+  <div class="li"><div class="ld" style="background:var(--b6)"></div>आत्माराम · 55 members</div>
+  <div class="li"><div class="ld" style="background:var(--b7)"></div>केशव · 30 members</div>
+  <div class="li"><div class="ld" style="background:var(--b8)"></div>तुकाराम · 2 members</div>
+</div>
+<div class="zc" id="zc">
+  <button class="zb" id="zin" title="Zoom In">+</button>
+  <button class="zb" id="zrs" title="Reset to default view" style="font-size:16px">↺</button>
+  <div class="zlbl">RESET</div>
+  <button class="zb" id="zot" title="Zoom Out">−</button>
+</div>
+<div class="ov" id="ov"></div>
+<div class="sh" id="sh">
+  <div class="shandle"><div></div></div>
+  <div class="shdr">
+    <button class="xcb" id="xcb">✕</button>
+    <div class="shbar" id="shbar"></div>
+    <div class="shmr" id="shmr"></div>
+    <div class="shen" id="shen"></div>
+    <span class="shbdg" id="shbdg"></span>
+  </div>
+  <div class="sbody" id="sbody"></div>
+  <div style="padding:0 22px">
+    <button class="crbtn" id="crb">✏️ Suggest a Correction · सुधारणा सुचवा</button>
+  </div>
+</div>
+<script>
+const P=[
+  {id:"P0001",mr:"बाळकृष्ण",en:"Balakrishna",gen:1,fid:null,b:"root",by:null,vil:null},
+  {id:"P0002",mr:"रघुनाथ",en:"Raghunath",gen:2,fid:"P0001",b:"b1",by:null,vil:null},
+  {id:"P0003",mr:"अनंत",en:"Anant",gen:3,fid:"P0002",b:"b1",by:null,vil:null},
+  {id:"P0004",mr:"पार्श्वनाथ",en:"Parswanath",gen:3,fid:"P0002",b:"b1",by:null,vil:null},
+  {id:"P0005",mr:"विठ्ठल",en:"Vitthal",gen:3,fid:"P0002",b:"b1",by:null,vil:null},
+  {id:"P0006",mr:"अशोक",en:"Ashok",gen:4,fid:"P0003",b:"b1",by:null,vil:null},
+  {id:"P0007",mr:"शशिकांत",en:"Shashikant",gen:4,fid:"P0004",b:"b1",by:null,vil:null},
+  {id:"P0008",mr:"चंद्रकांत",en:"Chandrakant",gen:4,fid:"P0004",b:"b1",by:null,vil:null},
+  {id:"P0009",mr:"प्रभाकर",en:"Prabhakar",gen:4,fid:"P0005",b:"b1",by:null,vil:null},
+  {id:"P0010",mr:"यशवंत",en:"Yashwant",gen:4,fid:"P0005",b:"b1",by:null,vil:null},
+  {id:"P0011",mr:"रामचंद्र",en:"Ramachandra",gen:4,fid:"P0005",b:"b1",by:null,vil:null},
+  {id:"P0012",mr:"राजेंद्र",en:"Rajendra",gen:5,fid:"P0008",b:"b1",by:null,vil:null},
+  {id:"P0013",mr:"रुपेश",en:"Rupesh",gen:5,fid:"P0008",b:"b1",by:null,vil:null},
+  {id:"P0014",mr:"अमित",en:"Amit",gen:5,fid:"P0009",b:"b1",by:null,vil:null},
+  {id:"P0015",mr:"आशीष",en:"Ashish",gen:5,fid:"P0009",b:"b1",by:null,vil:null},
+  {id:"P0016",mr:"दीपक",en:"Deepak",gen:5,fid:"P0010",b:"b1",by:null,vil:null},
+  {id:"P0017",mr:"उल्हास",en:"Ulhas",gen:5,fid:"P0010",b:"b1",by:null,vil:null},
+  {id:"P0018",mr:"सुरेश",en:"Suresh",gen:5,fid:"P0010",b:"b1",by:null,vil:null},
+  {id:"P0019",mr:"सचीक",en:"Sachik",gen:6,fid:"P0017",b:"b1",by:null,vil:null},
+  {id:"P0020",mr:"ऋषीकेश",en:"Rishikesh",gen:6,fid:"P0017",b:"b1",by:null,vil:null},
+  {id:"P0021",mr:"प्रसन्न",en:"Prasanna",gen:6,fid:"P0018",b:"b1",by:null,vil:null},
+  {id:"P0022",mr:"गोविंद",en:"Govind",gen:2,fid:"P0001",b:"b2",by:null,vil:null},
+  {id:"P0023",mr:"विष्णु",en:"Vishnu",gen:3,fid:"P0022",b:"b2",by:null,vil:null},
+  {id:"P0024",mr:"अनिल",en:"Anil",gen:4,fid:"P0023",b:"b2",by:null,vil:null},
+  {id:"P0025",mr:"सचिन",en:"Sachin",gen:5,fid:"P0024",b:"b2",by:null,vil:null},
+  {id:"P0026",mr:"स्वप्नील",en:"Swapnil",gen:5,fid:"P0024",b:"b2",by:null,vil:null},
+  {id:"P0027",mr:"विजय",en:"Vijay",gen:4,fid:"P0023",b:"b2",by:null,vil:null},
+  {id:"P0028",mr:"दत्तप्रसाद",en:"Dattaprasad",gen:5,fid:"P0027",b:"b2",by:null,vil:null},
+  {id:"P0029",mr:"मुरलीधर",en:"MurliDhar",gen:4,fid:"P0023",b:"b2",by:null,vil:null},
+  {id:"P0030",mr:"महादेव",en:"Mahadev",gen:4,fid:"P0023",b:"b2",by:null,vil:null},
+  {id:"P0031",mr:"समीर",en:"Sameer",gen:5,fid:"P0030",b:"b2",by:null,vil:null},
+  {id:"P0032",mr:"संजय",en:"Sanjay",gen:5,fid:"P0030",b:"b2",by:null,vil:null},
+  {id:"P0033",mr:"संतोष",en:"Santosh",gen:5,fid:"P0030",b:"b2",by:null,vil:null},
+  {id:"P0034",mr:"प्रणीत",en:"Pranit",gen:6,fid:"P0033",b:"b2",by:null,vil:null},
+  {id:"P0035",mr:"सुधाकर",en:"Sudhakar",gen:4,fid:"P0023",b:"b2",by:null,vil:null},
+  {id:"P0036",mr:"सतीश",en:"Satish",gen:5,fid:"P0035",b:"b2",by:null,vil:null},
+  {id:"P0037",mr:"आदित्य",en:"Aditya",gen:6,fid:"P0036",b:"b2",by:null,vil:null},
+  {id:"P0038",mr:"संदीप",en:"Sandip",gen:5,fid:"P0035",b:"b2",by:null,vil:null},
+  {id:"P0039",mr:"अमेय",en:"Amey",gen:6,fid:"P0038",b:"b2",by:null,vil:null},
+  {id:"P0040",mr:"मयंक",en:"Mayank",gen:6,fid:"P0038",b:"b2",by:null,vil:null},
+  {id:"P0041",mr:"दामोदर",en:"Damodar",gen:3,fid:"P0022",b:"b2",by:null,vil:null},
+  {id:"P0042",mr:"दत्ताराम",en:"Dattaram",gen:4,fid:"P0041",b:"b2",by:null,vil:null},
+  {id:"P0043",mr:"रमेश",en:"Ramesh",gen:4,fid:"P0041",b:"b2",by:null,vil:null},
+  {id:"P0044",mr:"प्रकाश",en:"Prakash",gen:4,fid:"P0041",b:"b2",by:null,vil:null},
+  {id:"P0045",mr:"प्रताप",en:"Pratap",gen:4,fid:"P0041",b:"b2",by:null,vil:null},
+  {id:"P0046",mr:"राजेश",en:"Rajesh",gen:5,fid:"P0042",b:"b2",by:null,vil:null},
+  {id:"P0047",mr:"रुपेश",en:"Rupesh",gen:5,fid:"P0042",b:"b2",by:null,vil:null},
+  {id:"P0048",mr:"जयेश",en:"Jayesh",gen:5,fid:"P0043",b:"b2",by:null,vil:null},
+  {id:"P0049",mr:"पंकज",en:"Pankaj",gen:5,fid:"P0044",b:"b2",by:null,vil:null},
+  {id:"P0050",mr:"प्रथमेश",en:"Prathamesh",gen:5,fid:"P0045",b:"b2",by:null,vil:null},
+  {id:"P0051",mr:"दामोदर",en:"Damodar",gen:4,fid:"P0041",b:"b2",by:null,vil:null},
+  {id:"P0052",mr:"जयपाल",en:"Jaypal",gen:5,fid:"P0051",b:"b2",by:null,vil:null},
+  {id:"P0053",mr:"मिलिंद",en:"Milind",gen:6,fid:"P0052",b:"b2",by:null,vil:null},
+  {id:"P0054",mr:"मृणाल",en:"Mrunal",gen:6,fid:"P0052",b:"b2",by:null,vil:null},
+  {id:"P0055",mr:"गोपाळ",en:"Gopal",gen:2,fid:"P0001",b:"b3",by:null,vil:null},
+  {id:"P0056",mr:"जगन्नाथ",en:"Jagannath",gen:3,fid:"P0055",b:"b3",by:null,vil:null},
+  {id:"P0057",mr:"सितारामा",en:"Sitarama",gen:3,fid:"P0055",b:"b3",by:null,vil:null},
+  {id:"P0058",mr:"दत्तात्रय",en:"Dattatraya",gen:3,fid:"P0055",b:"b3",by:null,vil:null},
+  {id:"P0059",mr:"पर्शराम",en:"Parsharam",gen:3,fid:"P0055",b:"b3",by:null,vil:null},
+  {id:"P0060",mr:"भार्गव",en:"Bhargav",gen:3,fid:"P0055",b:"b3",by:null,vil:null},
+  {id:"P0061",mr:"कृष्णा",en:"Krishna",gen:3,fid:"P0055",b:"b3",by:null,vil:null},
+  {id:"P0062",mr:"अनंत",en:"Anant",gen:4,fid:"P0056",b:"b3",by:null,vil:null},
+  {id:"P0063",mr:"सुबोध",en:"Subodh",gen:4,fid:"P0056",b:"b3",by:null,vil:null},
+  {id:"P0064",mr:"महावीर",en:"Mahavir",gen:4,fid:"P0056",b:"b3",by:null,vil:null},
+  {id:"P0065",mr:"शांतिकूमार",en:"Shantikumar",gen:5,fid:"P0062",b:"b3",by:null,vil:null},
+  {id:"P0066",mr:"सुरेंद्र",en:"Surendra",gen:5,fid:"P0062",b:"b3",by:null,vil:null},
+  {id:"P0067",mr:"जितेंद्र",en:"Jitendra",gen:5,fid:"P0062",b:"b3",by:null,vil:null},
+  {id:"P0068",mr:"सागर",en:"Sagar",gen:6,fid:"P0065",b:"b3",by:null,vil:null},
+  {id:"P0069",mr:"शुभम",en:"Shubham",gen:6,fid:"P0066",b:"b3",by:null,vil:null},
+  {id:"P0070",mr:"राहुल",en:"Rahul",gen:6,fid:"P0067",b:"b3",by:null,vil:null},
+  {id:"P0071",mr:"रोहन",en:"Rohan",gen:6,fid:"P0067",b:"b3",by:null,vil:null},
+  {id:"P0072",mr:"किरण",en:"Kiran",gen:5,fid:"P0063",b:"b3",by:null,vil:null},
+  {id:"P0073",mr:"अक्षय",en:"Akshay",gen:5,fid:"P0063",b:"b3",by:null,vil:null},
+  {id:"P0074",mr:"सिद्धांत",en:"Sidhant",gen:5,fid:"P0064",b:"b3",by:null,vil:null},
+  {id:"P0075",mr:"पद्माकर",en:"Padmakar",gen:4,fid:"P0058",b:"b3",by:null,vil:null},
+  {id:"P0076",mr:"सुधाकर",en:"Sudhakar",gen:4,fid:"P0058",b:"b3",by:null,vil:null},
+  {id:"P0077",mr:"अरविंद",en:"Arvind",gen:4,fid:"P0058",b:"b3",by:null,vil:null},
+  {id:"P0078",mr:"प्रकाश",en:"Prakash",gen:4,fid:"P0058",b:"b3",by:null,vil:null},
+  {id:"P0079",mr:"राजेश",en:"Rajesh",gen:5,fid:"P0075",b:"b3",by:null,vil:null},
+  {id:"P0080",mr:"शीतल",en:"Shital",gen:5,fid:"P0076",b:"b3",by:null,vil:null},
+  {id:"P0081",mr:"पराग",en:"Parag",gen:5,fid:"P0077",b:"b3",by:null,vil:null},
+  {id:"P0082",mr:"गौरव",en:"Gaurav",gen:5,fid:"P0078",b:"b3",by:null,vil:null},
+  {id:"P0083",mr:"रचित",en:"Rachit",gen:6,fid:"P0079",b:"b3",by:null,vil:null},
+  {id:"P0084",mr:"दर्शित",en:"Darshit",gen:6,fid:"P0080",b:"b3",by:null,vil:null},
+  {id:"P0085",mr:"रेयान",en:"Reyan",gen:6,fid:"P0081",b:"b3",by:null,vil:null},
+  {id:"P0086",mr:"सूर्यकांत",en:"Suryakant",gen:4,fid:"P0060",b:"b3",by:null,vil:null},
+  {id:"P0087",mr:"दिलीप",en:"Dilip",gen:4,fid:"P0060",b:"b3",by:null,vil:null},
+  {id:"P0088",mr:"सुनील",en:"Sunil",gen:5,fid:"P0086",b:"b3",by:null,vil:null},
+  {id:"P0089",mr:"अनिल",en:"Anil",gen:5,fid:"P0086",b:"b3",by:null,vil:null},
+  {id:"P0090",mr:"सचिन",en:"Sachin",gen:5,fid:"P0086",b:"b3",by:null,vil:null},
+  {id:"P0091",mr:"सोमनाथ",en:"Somnath",gen:5,fid:"P0087",b:"b3",by:null,vil:null},
+  {id:"P0092",mr:"विराज",en:"Viraj",gen:6,fid:"P0088",b:"b3",by:null,vil:null},
+  {id:"P0093",mr:"लक्ष्मण",en:"Laxman",gen:2,fid:"P0001",b:"b4",by:null,vil:null},
+  {id:"P0094",mr:"राजाराम",en:"Rajaram",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0095",mr:"यशवंत",en:"Yashwant",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0096",mr:"नागप्पा",en:"Nagappa",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0097",mr:"वामन",en:"Waman",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0098",mr:"जनार्दन",en:"Janardan",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0099",mr:"मुकुंद",en:"Mukund",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0100",mr:"विश्वनाथ",en:"Vishwanath",gen:3,fid:"P0093",b:"b4",by:null,vil:null},
+  {id:"P0101",mr:"धनकुमार",en:"Dhankumar",gen:4,fid:"P0094",b:"b4",by:null,vil:null},
+  {id:"P0102",mr:"शिवराम",en:"Shivram",gen:4,fid:"P0095",b:"b4",by:null,vil:null},
+  {id:"P0103",mr:"एकनाथ",en:"Eknath",gen:4,fid:"P0095",b:"b4",by:null,vil:null},
+  {id:"P0104",mr:"शशिकांत",en:"Shashikant",gen:4,fid:"P0096",b:"b4",by:null,vil:null},
+  {id:"P0105",mr:"श्रीकांत",en:"Shrikant",gen:4,fid:"P0096",b:"b4",by:null,vil:null},
+  {id:"P0106",mr:"प्रताप",en:"Pratap",gen:4,fid:"P0096",b:"b4",by:null,vil:null},
+  {id:"P0107",mr:"पद्माकर",en:"Padmakar",gen:4,fid:"P0096",b:"b4",by:null,vil:null},
+  {id:"P0108",mr:"जयपाल",en:"Jaypal",gen:4,fid:"P0097",b:"b4",by:null,vil:null},
+  {id:"P0109",mr:"बगाराम",en:"Bagaram",gen:4,fid:"P0097",b:"b4",by:null,vil:null},
+  {id:"P0110",mr:"मनोहर",en:"Manohar",gen:4,fid:"P0097",b:"b4",by:null,vil:null},
+  {id:"P0111",mr:"अविनाश",en:"Avinash",gen:4,fid:"P0097",b:"b4",by:null,vil:null},
+  {id:"P0112",mr:"अनिल",en:"Anil",gen:4,fid:"P0098",b:"b4",by:null,vil:null},
+  {id:"P0113",mr:"सुनील",en:"Sunil",gen:4,fid:"P0098",b:"b4",by:null,vil:null},
+  {id:"P0114",mr:"सुधीर",en:"Sudhir",gen:4,fid:"P0099",b:"b4",by:null,vil:null},
+  {id:"P0115",mr:"चंद्रकांत",en:"Chandrakant",gen:4,fid:"P0099",b:"b4",by:null,vil:null},
+  {id:"P0116",mr:"रविंद्र",en:"Ravindra",gen:4,fid:"P0099",b:"b4",by:null,vil:null},
+  {id:"P0117",mr:"जयेंद्र",en:"Jayendra",gen:4,fid:"P0099",b:"b4",by:null,vil:null},
+  {id:"P0118",mr:"संदेश",en:"Sandesh",gen:4,fid:"P0100",b:"b4",by:null,vil:null},
+  {id:"P0119",mr:"राजेश",en:"Rajesh",gen:4,fid:"P0100",b:"b4",by:null,vil:null},
+  {id:"P0120",mr:"कुलभूषण",en:"Kulbhushan",gen:5,fid:"P0101",b:"b4",by:null,vil:null},
+  {id:"P0121",mr:"सुरेश",en:"Suresh",gen:5,fid:"P0103",b:"b4",by:null,vil:null},
+  {id:"P0122",mr:"रमेश",en:"Ramesh",gen:5,fid:"P0103",b:"b4",by:null,vil:null},
+  {id:"P0123",mr:"संतोष",en:"Santosh",gen:5,fid:"P0103",b:"b4",by:null,vil:null},
+  {id:"P0124",mr:"दिलीप",en:"Dilip",gen:5,fid:"P0104",b:"b4",by:null,vil:null},
+  {id:"P0125",mr:"सुहास",en:"Suhas",gen:5,fid:"P0105",b:"b4",by:null,vil:null},
+  {id:"P0126",mr:"राजेंद्र",en:"Rajendra",gen:5,fid:"P0109",b:"b4",by:null,vil:null},
+  {id:"P0127",mr:"सुरेंद्र",en:"Surendra",gen:5,fid:"P0109",b:"b4",by:null,vil:null},
+  {id:"P0128",mr:"सागर",en:"Sagar",gen:5,fid:"P0110",b:"b4",by:null,vil:null},
+  {id:"P0129",mr:"सचिन",en:"Sachin",gen:5,fid:"P0110",b:"b4",by:null,vil:null},
+  {id:"P0130",mr:"ओंकार",en:"Omkar",gen:5,fid:"P0111",b:"b4",by:null,vil:null},
+  {id:"P0131",mr:"संकेत",en:"Sanket",gen:5,fid:"P0112",b:"b4",by:null,vil:null},
+  {id:"P0132",mr:"शशांक",en:"Shashank",gen:5,fid:"P0115",b:"b4",by:null,vil:null},
+  {id:"P0133",mr:"नीरज",en:"Neeraj",gen:5,fid:"P0116",b:"b4",by:null,vil:null},
+  {id:"P0134",mr:"केतन",en:"Ketan",gen:5,fid:"P0116",b:"b4",by:null,vil:null},
+  {id:"P0135",mr:"जयदीप",en:"Jaydeep",gen:5,fid:"P0117",b:"b4",by:null,vil:null},
+  {id:"P0136",mr:"अनिकेत",en:"Aniket",gen:5,fid:"P0118",b:"b4",by:null,vil:null},
+  {id:"P0137",mr:"प्रताप",en:"Pratap",gen:6,fid:"P0122",b:"b4",by:null,vil:null},
+  {id:"P0138",mr:"प्रवीण",en:"Praveen",gen:6,fid:"P0122",b:"b4",by:null,vil:null},
+  {id:"P0139",mr:"महादेव",en:"Mahadev",gen:2,fid:"P0001",b:"b5",by:null,vil:null},
+  {id:"P0140",mr:"सखाराम",en:"Sakharam",gen:3,fid:"P0139",b:"b5",by:null,vil:null},
+  {id:"P0141",mr:"संभाजी",en:"Sambhaji",gen:3,fid:"P0139",b:"b5",by:null,vil:null},
+  {id:"P0142",mr:"धोंडू",en:"Dhondu",gen:3,fid:"P0139",b:"b5",by:null,vil:null},
+  {id:"P0143",mr:"शांताराम",en:"Shantaram",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0144",mr:"वासुदेव",en:"Vasudev",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0145",mr:"काशीनाथ",en:"Kashinath",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0146",mr:"मनोहर",en:"Manohar",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0147",mr:"पांडुरंग",en:"Pandurang",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0148",mr:"अनंत",en:"Anant",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0149",mr:"रामचंद्र",en:"Ramchandra",gen:4,fid:"P0140",b:"b5",by:null,vil:null},
+  {id:"P0150",mr:"मधुकर",en:"Madhukar",gen:4,fid:"P0141",b:"b5",by:null,vil:null},
+  {id:"P0151",mr:"श्रीकांत",en:"Shrikant",gen:4,fid:"P0141",b:"b5",by:null,vil:null},
+  {id:"P0152",mr:"विजय",en:"Vijay",gen:4,fid:"P0141",b:"b5",by:null,vil:null},
+  {id:"P0153",mr:"सुरेश",en:"Suresh",gen:4,fid:"P0142",b:"b5",by:null,vil:null},
+  {id:"P0154",mr:"चंद्रकांत",en:"Chandrakant",gen:4,fid:"P0142",b:"b5",by:null,vil:null},
+  {id:"P0155",mr:"विलास",en:"Vilas",gen:4,fid:"P0142",b:"b5",by:null,vil:null},
+  {id:"P0156",mr:"अविनाश",en:"Avinash",gen:5,fid:"P0144",b:"b5",by:null,vil:null},
+  {id:"P0157",mr:"आदिनाथ",en:"Adinath",gen:5,fid:"P0144",b:"b5",by:null,vil:null},
+  {id:"P0158",mr:"प्रफुल्ल",en:"Prafull",gen:5,fid:"P0144",b:"b5",by:null,vil:null},
+  {id:"P0159",mr:"मोहन",en:"Mohan",gen:5,fid:"P0146",b:"b5",by:null,vil:null},
+  {id:"P0160",mr:"मुरलीधर",en:"Murlidhar",gen:5,fid:"P0146",b:"b5",by:null,vil:null},
+  {id:"P0161",mr:"मोरेश्वर",en:"Moreshwar",gen:5,fid:"P0146",b:"b5",by:null,vil:null},
+  {id:"P0162",mr:"मुकुंद",en:"Mukund",gen:5,fid:"P0146",b:"b5",by:null,vil:null},
+  {id:"P0163",mr:"शशिकांत",en:"Shashikant",gen:5,fid:"P0147",b:"b5",by:null,vil:null},
+  {id:"P0164",mr:"रवींद्र",en:"Ravindra",gen:5,fid:"P0147",b:"b5",by:null,vil:null},
+  {id:"P0165",mr:"नंदकुमार",en:"Nandakumar",gen:5,fid:"P0147",b:"b5",by:null,vil:null},
+  {id:"P0166",mr:"संजीव",en:"Sanjeev",gen:5,fid:"P0147",b:"b5",by:null,vil:null},
+  {id:"P0167",mr:"राजीव",en:"Rajiv",gen:5,fid:"P0147",b:"b5",by:null,vil:null},
+  {id:"P0168",mr:"प्रदीप",en:"Pradeep",gen:5,fid:"P0148",b:"b5",by:null,vil:null},
+  {id:"P0169",mr:"संजय",en:"Sanjay",gen:5,fid:"P0148",b:"b5",by:null,vil:null},
+  {id:"P0170",mr:"संजय",en:"Sanjay",gen:5,fid:"P0151",b:"b5",by:null,vil:null},
+  {id:"P0171",mr:"हेमंत",en:"Hemant",gen:5,fid:"P0151",b:"b5",by:null,vil:null},
+  {id:"P0172",mr:"सचिन",en:"Sachin",gen:5,fid:"P0151",b:"b5",by:null,vil:null},
+  {id:"P0173",mr:"राजकुमार",en:"Rajkumar",gen:5,fid:"P0152",b:"b5",by:null,vil:null},
+  {id:"P0174",mr:"कृष्णकांत",en:"Krishnakant",gen:5,fid:"P0153",b:"b5",by:null,vil:null},
+  {id:"P0175",mr:"शशिकांत",en:"Shashikant",gen:5,fid:"P0153",b:"b5",by:null,vil:null},
+  {id:"P0176",mr:"संतोष",en:"Santosh",gen:5,fid:"P0154",b:"b5",by:null,vil:null},
+  {id:"P0177",mr:"सचिन",en:"Sachin",gen:5,fid:"P0154",b:"b5",by:null,vil:null},
+  {id:"P0178",mr:"विजय",en:"Vijay",gen:5,fid:"P0155",b:"b5",by:null,vil:null},
+  {id:"P0179",mr:"विकास",en:"Vikas",gen:5,fid:"P0155",b:"b5",by:null,vil:null},
+  {id:"P0180",mr:"सुहास",en:"Suhas",gen:5,fid:"P0155",b:"b5",by:null,vil:null},
+  {id:"P0181",mr:"अजय",en:"Ajay",gen:6,fid:"P0156",b:"b5",by:null,vil:null},
+  {id:"P0182",mr:"कुणाल",en:"Kunal",gen:6,fid:"P0157",b:"b5",by:null,vil:null},
+  {id:"P0183",mr:"प्रथमेश",en:"Prathamesh",gen:6,fid:"P0158",b:"b5",by:null,vil:null},
+  {id:"P0184",mr:"सचिन",en:"Sachin",gen:6,fid:"P0159",b:"b5",by:null,vil:null},
+  {id:"P0185",mr:"प्रितेश",en:"Pritesh",gen:6,fid:"P0160",b:"b5",by:null,vil:null},
+  {id:"P0186",mr:"निखिल",en:"Nikhil",gen:6,fid:"P0163",b:"b5",by:null,vil:null},
+  {id:"P0187",mr:"सचिन",en:"Sachin",gen:6,fid:"P0165",b:"b5",by:null,vil:null},
+  {id:"P0188",mr:"कुणाल",en:"Kunal",gen:6,fid:"P0166",b:"b5",by:null,vil:null},
+  {id:"P0189",mr:"स्वप्नील",en:"Swapnil",gen:6,fid:"P0168",b:"b5",by:null,vil:null},
+  {id:"P0190",mr:"गौरव",en:"Gaurav",gen:6,fid:"P0168",b:"b5",by:null,vil:null},
+  {id:"P0191",mr:"सिद्धेश",en:"Siddhesh",gen:6,fid:"P0169",b:"b5",by:null,vil:null},
+  {id:"P0192",mr:"निनाद",en:"Ninad",gen:6,fid:"P0170",b:"b5",by:null,vil:null},
+  {id:"P0193",mr:"ओंकार",en:"Omkar",gen:6,fid:"P0171",b:"b5",by:null,vil:null},
+  {id:"P0194",mr:"आत्माराम",en:"Atmaram",gen:2,fid:"P0001",b:"b6",by:null,vil:null},
+  {id:"P0195",mr:"सदाशिव",en:"Sadashiv",gen:3,fid:"P0194",b:"b6",by:null,vil:null},
+  {id:"P0196",mr:"नारायण",en:"Narayan",gen:3,fid:"P0194",b:"b6",by:null,vil:null},
+  {id:"P0197",mr:"जयराम",en:"Jayaram",gen:3,fid:"P0194",b:"b6",by:null,vil:null},
+  {id:"P0198",mr:"भगवान",en:"Bhagwan",gen:3,fid:"P0194",b:"b6",by:null,vil:null},
+  {id:"P0199",mr:"चंद्रकांत",en:"Chandrakant",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0200",mr:"प्रभाकर",en:"Prabhakar",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0201",mr:"मधुकर",en:"Madhukar",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0202",mr:"सुरेश",en:"Suresh",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0203",mr:"बाळकृष्ण",en:"Balkrishna",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0204",mr:"अविनाश",en:"Avinash",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0205",mr:"मोहन",en:"Mohan",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0206",mr:"सुभाष",en:"Subhash",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0207",mr:"अरुण",en:"Arun",gen:4,fid:"P0195",b:"b6",by:null,vil:null},
+  {id:"P0208",mr:"भाऊ",en:"Bhau",gen:4,fid:"P0196",b:"b6",by:null,vil:null},
+  {id:"P0209",mr:"जिनेंद्र",en:"Jinendra",gen:4,fid:"P0196",b:"b6",by:null,vil:null},
+  {id:"P0210",mr:"नेमिनाथ",en:"Neminath",gen:4,fid:"P0196",b:"b6",by:null,vil:null},
+  {id:"P0211",mr:"जयपाल",en:"Jaypal",gen:4,fid:"P0196",b:"b6",by:null,vil:null},
+  {id:"P0212",mr:"आत्माराम",en:"Atmaram",gen:4,fid:"P0196",b:"b6",by:null,vil:null},
+  {id:"P0213",mr:"श्यामराव",en:"Shyamrao",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0214",mr:"नाभिराज",en:"Nabhiraaj",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0215",mr:"रामकृष्ण",en:"Ramkrishna",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0216",mr:"दिगंबर",en:"Digambar",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0217",mr:"अशोक",en:"Ashok",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0218",mr:"विलास",en:"Vilas",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0219",mr:"रविंद्र",en:"Ravindra",gen:4,fid:"P0197",b:"b6",by:null,vil:null},
+  {id:"P0220",mr:"शेखर",en:"Shekhar",gen:5,fid:"P0199",b:"b6",by:null,vil:null},
+  {id:"P0221",mr:"प्रसन्न",en:"Prasanna",gen:5,fid:"P0200",b:"b6",by:null,vil:null},
+  {id:"P0222",mr:"प्रवीण",en:"Praveen",gen:5,fid:"P0200",b:"b6",by:null,vil:null},
+  {id:"P0223",mr:"चेतन",en:"Chetan",gen:5,fid:"P0202",b:"b6",by:null,vil:null},
+  {id:"P0224",mr:"सचिन",en:"Sachin",gen:5,fid:"P0202",b:"b6",by:null,vil:null},
+  {id:"P0225",mr:"निनाद",en:"Ninad",gen:5,fid:"P0203",b:"b6",by:null,vil:null},
+  {id:"P0226",mr:"नितिन",en:"Nitin",gen:5,fid:"P0204",b:"b6",by:null,vil:null},
+  {id:"P0227",mr:"अवेद",en:"Aved",gen:5,fid:"P0205",b:"b6",by:null,vil:null},
+  {id:"P0228",mr:"रोहित",en:"Rohit",gen:5,fid:"P0206",b:"b6",by:null,vil:null},
+  {id:"P0229",mr:"अनिकेत",en:"Aniket",gen:5,fid:"P0207",b:"b6",by:null,vil:null},
+  {id:"P0230",mr:"तेजस",en:"Tejas",gen:5,fid:"P0207",b:"b6",by:null,vil:null},
+  {id:"P0231",mr:"विनोद",en:"Vinod",gen:5,fid:"P0208",b:"b6",by:null,vil:null},
+  {id:"P0232",mr:"अजित",en:"Ajit",gen:5,fid:"P0210",b:"b6",by:null,vil:null},
+  {id:"P0233",mr:"राजेंद्र",en:"Rajendra",gen:5,fid:"P0210",b:"b6",by:null,vil:null},
+  {id:"P0234",mr:"सुशीलकुमार",en:"Sushilkumar",gen:5,fid:"P0210",b:"b6",by:null,vil:null},
+  {id:"P0235",mr:"महेश",en:"Mahesh",gen:5,fid:"P0211",b:"b6",by:null,vil:null},
+  {id:"P0236",mr:"आश्विन",en:"Ashwin",gen:5,fid:"P0212",b:"b6",by:null,vil:null},
+  {id:"P0237",mr:"कुणाल",en:"Kunal",gen:5,fid:"P0212",b:"b6",by:null,vil:null},
+  {id:"P0238",mr:"अरिहंत",en:"Arihant",gen:5,fid:"P0212",b:"b6",by:null,vil:null},
+  {id:"P0239",mr:"विद्याधर",en:"Vidyadhar",gen:5,fid:"P0213",b:"b6",by:null,vil:null},
+  {id:"P0240",mr:"कमलाकर",en:"Kamalakar",gen:5,fid:"P0213",b:"b6",by:null,vil:null},
+  {id:"P0241",mr:"महावीर",en:"Mahavir",gen:5,fid:"P0214",b:"b6",by:null,vil:null},
+  {id:"P0242",mr:"राहुल",en:"Rahul",gen:5,fid:"P0215",b:"b6",by:null,vil:null},
+  {id:"P0243",mr:"रोहित",en:"Rohit",gen:5,fid:"P0215",b:"b6",by:null,vil:null},
+  {id:"P0244",mr:"जितेन",en:"Jiten",gen:5,fid:"P0218",b:"b6",by:null,vil:null},
+  {id:"P0245",mr:"निलेश",en:"Nilesh",gen:5,fid:"P0219",b:"b6",by:null,vil:null},
+  {id:"P0246",mr:"यश",en:"Yash",gen:6,fid:"P0222",b:"b6",by:null,vil:null},
+  {id:"P0247",mr:"अभय",en:"Abhay",gen:6,fid:"P0231",b:"b6",by:null,vil:null},
+  {id:"P0248",mr:"देवेंद्र",en:"Devendra",gen:6,fid:"P0231",b:"b6",by:null,vil:null},
+  {id:"P0249",mr:"केशव",en:"Keshav",gen:2,fid:"P0001",b:"b7",by:null,vil:null},
+  {id:"P0250",mr:"तुकाराम",en:"Tukaram",gen:3,fid:"P0249",b:"b7",by:null,vil:null},
+  {id:"P0251",mr:"गंगाराम",en:"Gangaram",gen:3,fid:"P0249",b:"b7",by:null,vil:null},
+  {id:"P0252",mr:"शंकर",en:"Shankar",gen:3,fid:"P0249",b:"b7",by:null,vil:null},
+  {id:"P0253",mr:"श्रीधर",en:"Shridhar",gen:3,fid:"P0249",b:"b7",by:null,vil:null},
+  {id:"P0254",mr:"गणपत",en:"Ganpat",gen:3,fid:"P0249",b:"b7",by:null,vil:null},
+  {id:"P0255",mr:"प्रकाश",en:"Prakash",gen:4,fid:"P0251",b:"b7",by:null,vil:null},
+  {id:"P0256",mr:"रमेश",en:"Ramesh",gen:4,fid:"P0251",b:"b7",by:null,vil:null},
+  {id:"P0257",mr:"अशोक",en:"Ashok",gen:4,fid:"P0252",b:"b7",by:null,vil:null},
+  {id:"P0258",mr:"प्रभाकर",en:"Prabhakar",gen:4,fid:"P0252",b:"b7",by:null,vil:null},
+  {id:"P0259",mr:"गजानन",en:"Gajanan",gen:4,fid:"P0252",b:"b7",by:null,vil:null},
+  {id:"P0260",mr:"दत्तात्रय",en:"Dattatraya",gen:4,fid:"P0253",b:"b7",by:null,vil:null},
+  {id:"P0261",mr:"अदिनाथ",en:"Adinath",gen:4,fid:"P0253",b:"b7",by:null,vil:null},
+  {id:"P0262",mr:"शशिकांत",en:"Shashikant",gen:4,fid:"P0253",b:"b7",by:null,vil:null},
+  {id:"P0263",mr:"भास्कर",en:"Bhaskar",gen:4,fid:"P0253",b:"b7",by:null,vil:null},
+  {id:"P0264",mr:"वसंत",en:"Vasant",gen:4,fid:"P0254",b:"b7",by:null,vil:null},
+  {id:"P0265",mr:"हरीश्वंद",en:"Harishwand",gen:4,fid:"P0254",b:"b7",by:null,vil:null},
+  {id:"P0266",mr:"हरि",en:"Hari",gen:4,fid:"P0254",b:"b7",by:null,vil:null},
+  {id:"P0267",mr:"मानिष",en:"Manish",gen:5,fid:"P0255",b:"b7",by:null,vil:null},
+  {id:"P0268",mr:"आशिष",en:"Ashish",gen:5,fid:"P0256",b:"b7",by:null,vil:null},
+  {id:"P0269",mr:"अभिजीत",en:"Abhijit",gen:5,fid:"P0258",b:"b7",by:null,vil:null},
+  {id:"P0270",mr:"रविंद्र",en:"Ravindra",gen:5,fid:"P0259",b:"b7",by:null,vil:null},
+  {id:"P0271",mr:"रविंद्र",en:"Ravindra",gen:5,fid:"P0260",b:"b7",by:null,vil:null},
+  {id:"P0272",mr:"उदय",en:"Uday",gen:5,fid:"P0260",b:"b7",by:null,vil:null},
+  {id:"P0273",mr:"विवेकानंद",en:"Vivekanand",gen:5,fid:"P0261",b:"b7",by:null,vil:null},
+  {id:"P0274",mr:"उमेश",en:"Umesh",gen:5,fid:"P0261",b:"b7",by:null,vil:null},
+  {id:"P0275",mr:"लक्ष्मीकांत",en:"Lakshmikant",gen:5,fid:"P0262",b:"b7",by:null,vil:null},
+  {id:"P0276",mr:"मुकेश",en:"Mukesh",gen:5,fid:"P0262",b:"b7",by:null,vil:null},
+  {id:"P0277",mr:"सुहास",en:"Suhas",gen:5,fid:"P0262",b:"b7",by:null,vil:null},
+  {id:"P0278",mr:"शीतल",en:"Shital",gen:5,fid:"P0264",b:"b7",by:null,vil:null},
+  {id:"P0279",mr:"तुकाराम",en:"Tukaram",gen:2,fid:"P0001",b:"b8",by:null,vil:null},
+  {id:"P0280",mr:"शिवराम",en:"Shivram",gen:3,fid:"P0279",b:"b8",by:null,vil:null}
+];
+
+const BC={root:"#1B2B5E",b1:"#B5451B",b2:"#1A6B3A",b3:"#1455A4",b4:"#6B3E26",b5:"#7B2D8B",b6:"#C17D11",b7:"#1B7A7A",b8:"#5C6B30"};
+const BN={root:"बाळकृष्ण",b1:"रघुनाथ Raghunath",b2:"गोविंद Govind",b3:"गोपाळ Gopal",b4:"लक्ष्मण Laxman",b5:"महादेव Mahadev",b6:"आत्माराम Atmaram",b7:"केशव Keshav",b8:"तुकाराम Tukaram"};
+const GN={1:"Gen 1 · पिढी १",2:"Gen 2 · पिढी २",3:"Gen 3 · पिढी ३",4:"Gen 4 · पिढी ४",5:"Gen 5 · पिढी ५",6:"Gen 6 · पिढी ६"};
+const byId={},kids={};
+P.forEach(p=>{byId[p.id]=p;if(p.fid){kids[p.fid]=kids[p.fid]||[];kids[p.fid].push(p)}});
+function c(b){return BC[b]||"#999"}
+function subtreeCount(id,seen=new Set()){if(seen.has(id))return 0;seen.add(id);return(kids[id]||[]).reduce((n,k)=>n+1+subtreeCount(k.id,seen),0);}
+const coll=new Set();
+function initColl(){
+  coll.clear();
+  P.forEach(p=>{if(p.gen===3&&(kids[p.id]||[]).length>0)coll.add(p.id);});
+}
+const CW=130,CH=60,HGAP=26,VGAP=88;
+let curFilter="all",curPos={},sc=0.72,ox=40,oy=40;
+
+function visible(filter){
+  const out=[];
+  function walk(id){
+    const p=byId[id];if(!p)return;
+    if(filter!=="all"&&p.b!==filter&&p.id!=="P0001")return;
+    out.push(p);
+    if(!coll.has(id))(kids[id]||[]).forEach(k=>walk(k.id));
+  }
+  walk("P0001");return out;
+}
+
+function layout(nodes){
+  const pos={};let cursor=0;
+  const nodeSet=new Set(nodes.map(n=>n.id));
+  function ax(id){
+    if(!nodeSet.has(id))return;
+    const ks=(kids[id]||[]).filter(k=>nodeSet.has(k.id)&&!coll.has(id));
+    if(!ks.length||coll.has(id)){pos[id]={x:cursor};cursor+=CW+HGAP;}
+    else{ks.forEach(k=>ax(k.id));const xs=ks.map(k=>pos[k.id]?.x).filter(x=>x!=null);pos[id]={x:xs.length?(Math.min(...xs)+Math.max(...xs))/2:cursor};}
+  }
+  ax("P0001");
+  nodes.forEach(n=>{if(pos[n.id])pos[n.id].y=(n.gen-1)*(CH+VGAP)+20;});
+  return pos;
+}
+
+function render(){
+  const world=document.getElementById("world");
+  const nodes=visible(curFilter);
+  const pos=layout(nodes);curPos=pos;
+  world.innerHTML='<svg id="svgl"></svg>';
+  const svg=document.getElementById("svgl");
+  const xs=nodes.map(n=>pos[n.id]?.x||0),ys=nodes.map(n=>pos[n.id]?.y||0);
+  const ww=Math.max(...xs)+CW+60,wh=Math.max(...ys)+CH+80;
+  svg.setAttribute("width",ww);svg.setAttribute("height",wh);
+  // Connectors
+  nodes.forEach(n=>{
+    const pp=pos[n.fid],cp=pos[n.id];
+    if(!pp||!cp)return;
+    const x1=pp.x+CW/2,y1=pp.y+CH,x2=cp.x+CW/2,y2=cp.y,my=(y1+y2)/2;
+    const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d",`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`);
+    path.setAttribute("fill","none");path.setAttribute("stroke",c(n.b));
+    path.setAttribute("stroke-opacity","0.28");path.setAttribute("stroke-width","1.8");
+    svg.appendChild(path);
+  });
+  // Nodes
+  nodes.forEach(n=>{
+    const p=pos[n.id];if(!p)return;
+    const isC=coll.has(n.id),hasK=(kids[n.id]||[]).length>0;
+    const kc=subtreeCount(n.id);
+    const meta=isC&&kc>0?`▸ ${kc} member${kc>1?"s":""} collapsed`:"";
+    const div=document.createElement("div");
+    div.className="node";
+    div.style.cssText=`left:${p.x}px;top:${p.y}px;border-color:${c(n.b)}`;
+    div.dataset.id=n.id;
+    div.innerHTML=`
+      <div class="nbar" style="background:${c(n.b)}"></div>
+      <div class="nbody">
+        <div class="nmr">${n.mr}</div>
+        <div class="nen">${n.en}</div>
+        ${meta?`<div class="nmeta">${meta}</div>`:""}
+      </div>
+      ${hasK?`<button class="tbtn" style="border-color:${c(n.b)};color:${c(n.b)}" data-t="${n.id}">${isC?"▶":"▼"}</button>`:""}
+    `;
+    div.addEventListener("click",e=>{if(!e.target.closest("[data-t]"))openProfile(n.id);});
+    world.appendChild(div);
+  });
+  world.querySelectorAll("[data-t]").forEach(btn=>{
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      const id=btn.dataset.t;
+      coll.has(id)?coll.delete(id):coll.add(id);
+      render();
+    });
+  });
+  drawGenLabels(pos,nodes);
+  applyT();
+}
+
+function drawGenLabels(pos,nodes){
+  const el=document.getElementById("glabels");el.innerHTML="";
+  const gy={};nodes.forEach(n=>{if(gy[n.gen]===undefined)gy[n.gen]=pos[n.id]?.y;});
+  const hh=document.getElementById("hdr").offsetHeight+document.getElementById("filters").offsetHeight;
+  Object.entries(gy).forEach(([g,y])=>{
+    if(y===undefined)return;
+    const d=document.createElement("div");d.className="gl";
+    d.textContent=GN[g]||`Gen ${g}`;
+    d.style.top=(hh+y*sc+oy+(CH*sc/2)-8)+"px";
+    el.appendChild(d);
+  });
+}
+
+function applyT(){
+  document.getElementById("world").style.transform=`translate(${ox}px,${oy}px) scale(${sc})`;
+  drawGenLabels(curPos,visible(curFilter));
+}
+
+function setupCanvas(){
+  const cv=document.getElementById("canvas");
+  const hdrH=document.getElementById("hdr").offsetHeight;
+  const filEl=document.getElementById("filters");
+  filEl.style.top=hdrH+"px";
+  const hh=hdrH+filEl.offsetHeight;
+  cv.style.top=hh+"px";cv.style.left="0";cv.style.right="0";cv.style.bottom="0";
+  document.getElementById("legend").style.bottom="20px";
+  document.getElementById("zc").style.bottom="20px";
+}
+
+// Pan/zoom
+const cv=document.getElementById("canvas");
+let drag=false,lx=0,ly=0,pd=0,lt=null;
+cv.addEventListener("mousedown",e=>{if(e.target.closest(".node")||e.target.closest(".tbtn"))return;drag=true;lx=e.clientX;ly=e.clientY;cv.classList.add("grab");});
+window.addEventListener("mousemove",e=>{if(!drag)return;ox+=e.clientX-lx;oy+=e.clientY-ly;lx=e.clientX;ly=e.clientY;applyT();});
+window.addEventListener("mouseup",()=>{drag=false;cv.classList.remove("grab");});
+cv.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const f=e.deltaY>0?0.9:1.11;
+  const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  ox=mx-(mx-ox)*f;oy=my-(my-oy)*f;sc=Math.max(.12,Math.min(sc*f,3));applyT();
+},{passive:false});
+cv.addEventListener("touchstart",e=>{
+  if(e.touches.length===1)lt={x:e.touches[0].clientX,y:e.touches[0].clientY};
+  else if(e.touches.length===2)pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+},{passive:true});
+cv.addEventListener("touchmove",e=>{
+  e.preventDefault();
+  if(e.touches.length===1&&lt){ox+=e.touches[0].clientX-lt.x;oy+=e.touches[0].clientY-lt.y;lt={x:e.touches[0].clientX,y:e.touches[0].clientY};applyT();}
+  else if(e.touches.length===2){
+    const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+    const f=d/pd,cx2=(e.touches[0].clientX+e.touches[1].clientX)/2,cy2=(e.touches[0].clientY+e.touches[1].clientY)/2;
+    const r=cv.getBoundingClientRect(),mx=cx2-r.left,my=cy2-r.top;
+    ox=mx-(mx-ox)*f;oy=my-(my-oy)*f;sc=Math.max(.12,Math.min(sc*f,3));pd=d;applyT();
+  }
+},{passive:false});
+cv.addEventListener("touchend",()=>{lt=null;},{passive:true});
+document.getElementById("zin").onclick=()=>{sc=Math.min(sc*1.3,3);applyT();};
+document.getElementById("zot").onclick=()=>{sc=Math.max(sc*.77,.12);applyT();};
+document.getElementById("zrs").onclick=()=>{
+  initColl();sc=0.72;ox=40;oy=40;curFilter="all";
+  document.querySelectorAll(".fb").forEach(b=>{b.classList.remove("on");b.style.background="#fff";b.style.color=b.style.borderColor;});
+  const ab=document.querySelector(".fb[data-b='all']");
+  if(ab){ab.classList.add("on");ab.style.background=ab.style.borderColor;ab.style.color="#fff";}
+  render();
+};
+
+// Search
+const sinp=document.getElementById("si"),sres=document.getElementById("sr");
+sinp.addEventListener("input",()=>{
+  const q=sinp.value.trim().toLowerCase();
+  if(!q){sres.classList.remove("show");return;}
+  const m=P.filter(p=>p.en.toLowerCase().includes(q)||p.mr.includes(q)).slice(0,10);
+  sres.innerHTML=m.length?m.map(p=>`<div class="si" onclick="focusNode('${p.id}')"><div class="sdot" style="background:${c(p.b)}"></div><div style="flex:1"><div class="smr">${p.mr}</div><div class="sen">${p.en}</div></div><div class="sgen">Gen ${p.gen}</div></div>`).join(""):`<div class="nores">No match found · कोणतेही नाव सापडले नाही</div>`;
+  sres.classList.add("show");
+});
+document.addEventListener("click",e=>{if(!e.target.closest(".swrap"))sres.classList.remove("show");});
+
+function focusNode(id){
+  sinp.value="";sres.classList.remove("show");
+  let cur=byId[id];
+  while(cur&&cur.fid){coll.delete(cur.fid);cur=byId[cur.fid];}
+  render();
+  setTimeout(()=>{
+    const p=curPos[id];if(!p)return;
+    const r=cv.getBoundingClientRect();
+    ox=r.width/2-(p.x+CW/2)*sc;oy=r.height/2-(p.y+CH/2)*sc;applyT();
+    document.querySelectorAll(".node").forEach(n=>n.classList.remove("hi"));
+    const el=document.querySelector(`[data-id="${id}"]`);
+    if(el){el.classList.add("hi");setTimeout(()=>el.classList.remove("hi"),2500);}
+    openProfile(id);
+  },80);
+}
+
+// Branch filter
+document.querySelectorAll(".fb").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".fb").forEach(b=>{b.classList.remove("on");b.style.background="#fff";b.style.color=b.style.borderColor;});
+    btn.classList.add("on");btn.style.background=btn.style.borderColor;btn.style.color="#fff";
+    curFilter=btn.dataset.b;render();
+  });
+});
+
+// Profile sheet
+function openProfile(id){
+  const p=byId[id];if(!p)return;
+  const col=c(p.b);
+  document.getElementById("shbar").style.background=col;
+  document.getElementById("shmr").textContent=p.mr;
+  document.getElementById("shen").textContent=p.en;
+  const bdg=document.getElementById("shbdg");bdg.textContent=`Generation ${p.gen} · ${p.gen}वी पिढी`;bdg.style.background=col;
+  const fa=p.fid?byId[p.fid]:null,ks=kids[id]||[];
+  let h="";
+  if(fa)h+=`<div class="pr"><div class="pi">👨</div><div><div class="plbl">Father · वडील</div><div class="pval"><span class="lnk" onclick="openProfile('${fa.id}')">${fa.mr} / ${fa.en}</span></div></div></div>`;
+  else h+=`<div class="pr"><div class="pi">🌳</div><div><div class="plbl">Family Root · मूळ पुरुष</div><div class="pval">Founding ancestor of all 8 branches</div></div></div>`;
+  if(ks.length)h+=`<div class="pr"><div class="pi">👦</div><div><div class="plbl">Sons · मुले (${ks.length})</div><div class="chips">${ks.map(k=>`<div class="chip" onclick="openProfile('${k.id}')"><span class="cmr">${k.mr}</span><span class="cen">${k.en}</span></div>`).join("")}</div></div></div>`;
+  h+=`<div class="pr"><div class="pi">🌿</div><div><div class="plbl">Branch · शाखा</div><div class="pval" style="color:${col};font-weight:600">${BN[p.b]||"—"} Branch</div></div></div>`;
+  if(p.by)h+=`<div class="pr"><div class="pi">🎂</div><div><div class="plbl">Birth Year · जन्म वर्ष</div><div class="pval">${p.by}</div></div></div>`;
+  if(p.vil)h+=`<div class="pr"><div class="pi">🏡</div><div><div class="plbl">Village · गाव</div><div class="pval">${p.vil}</div></div></div>`;
+  h+=`<div class="pr"><div class="pi">🆔</div><div><div class="plbl">Person ID</div><div class="pval" style="font-size:13px;color:var(--muted)">${p.id}</div></div></div>`;
+  document.getElementById("sbody").innerHTML=h;
+  document.getElementById("crb").onclick=()=>alert(`Correction for: ${p.en} (${p.id})\n\nPlease share:\n1. What is incorrect\n2. What the correct information should be\n\nSend to family admin Pranit (P0034)\n\n[Google Form link will be added here]`);
+  document.getElementById("ov").classList.add("on");
+  document.getElementById("sh").classList.add("on");
+}
+function closeSheet(){document.getElementById("ov").classList.remove("on");document.getElementById("sh").classList.remove("on");}
+document.getElementById("ov").onclick=closeSheet;
+document.getElementById("xcb").onclick=closeSheet;
+let tsy=0;
+document.getElementById("sh").addEventListener("touchstart",e=>{tsy=e.touches[0].clientY;},{passive:true});
+document.getElementById("sh").addEventListener("touchend",e=>{if(e.changedTouches[0].clientY-tsy>80)closeSheet();},{passive:true});
+
+// Init
+initColl();setupCanvas();render();
+window.addEventListener("resize",()=>{setupCanvas();render();});
+
+</script>
+</body>
+</html>
