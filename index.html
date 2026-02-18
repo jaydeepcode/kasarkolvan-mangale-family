@@ -151,7 +151,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--indigo);
   </div>
   <div class="sbody" id="sbody"></div>
   <div style="padding:0 22px">
-    <button class="crbtn" id="crb">✏️ Suggest a Correction · सुधारणा सुचवा</button>
+    <button class="crbtn" id="crb">✏️ सुधारणा सुचवा</button>
   </div>
 </div>
 <script>
@@ -652,7 +652,17 @@ function openProfile(id){
   if(p.vil)h+=`<div class="pr"><div class="pi">🏡</div><div><div class="plbl">Village · गाव</div><div class="pval">${p.vil}</div></div></div>`;
   h+=`<div class="pr"><div class="pi">🆔</div><div><div class="plbl">Person ID</div><div class="pval" style="font-size:13px;color:var(--muted)">${p.id}</div></div></div>`;
   document.getElementById("sbody").innerHTML=h;
-  document.getElementById("crb").onclick=()=>alert(`Correction for: ${p.en} (${p.id})\n\nPlease share:\n1. What is incorrect\n2. What the correct information should be\n\nSend to family admin Pranit (P0034)\n\n[Google Form link will be added here]`);
+  document.getElementById("crb").onclick=()=>{
+    const fa=p.fid?byId[p.fid]:null;
+    const personName=fa?`${p.mr} (${fa.mr} यांचे पुत्र)`:`${p.mr} (मूळ पुरुष)`;
+    const currentName=p.mr;
+    const formUrl="https://docs.google.com/forms/d/e/1FAIpQLSd4nxVWT2K486nY5I6DDCX-oxk7FK8iP_6wQq8i7GBNcY5ehQ/viewform?usp=pp_url"
+      +"&entry.2064060131="+encodeURIComponent(p.id)
+      +"&entry.559573323="+encodeURIComponent(personName)
+      +"&entry.24507567="+encodeURIComponent(currentName)
+      +"&entry.1493931833="+encodeURIComponent(currentName);
+    window.open(formUrl,"_blank");
+  };
   document.getElementById("ov").classList.add("on");
   document.getElementById("sh").classList.add("on");
 }
